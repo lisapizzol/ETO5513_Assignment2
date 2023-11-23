@@ -23,3 +23,56 @@ colnames(population_raw)<-population_raw[12,]
 population <- population_raw[-c(1:12),] 
 
 ```
+
+
+# Section 1 - World and Continent Population Changes
+### Data Description
+The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in \@ref(tab:data2) have been used in this Section 1 of this assignment. 
+
+
+
+
+```{r data1, message=FALSE, warning=FALSE, include=FALSE}
+pop1<-select(population,c(3,9,11,12,13) ) %>%
+  filter(Type %in% c("World","Region"))
+pop1$Year<-as.numeric(pop1$Year)
+pop1$`Total Population, as of 1 January (thousands)`<-as.numeric(pop1$`Total Population, as of 1 January (thousands)`)
+pop1$`Total Population, as of 1 July (thousands)`<-as.numeric(pop1$`Total Population, as of 1 July (thousands)`)
+
+```
+
+
+STILL NEEDS TO BE FINISHED!!!!
+The variable Entity contains categorical information of either Global, Northern Hemisphere or Southern Hemisphere, meanwhile the variable year contains values from 1850 to 2023. All other variables are described in Table \@ref(tab:data). 
+
+
+```{r data2, echo=TRUE, message=FALSE, warning=FALSE}
+# table of variable names
+kable(names(temperature_anomaly),caption = "Variable Names", col.names = 'Names') %>%
+  kable_styling()
+```
+
+# Data set Description
+The data set contains `r ncol(temperature_anomaly)` variables as outlined in Section \@ref(refsection) - Data set Introduction above and `r nrow(temperature_anomaly)` observations.
+The inline code for the previous sentence can be seen below in Figure \@ref(fig:data2).
+
+
+```{r data2, echo=TRUE, fig.cap="Image of the inline code for data description", message=FALSE, warning=FALSE}
+# show image of inline code
+include_graphics("Image/Description_size_of_data.png")
+```
+
+The variable types for the first two observations in the data set are displayed below.
+
+
+```{r data3, echo=TRUE, fig.cap="Variable types for the first two observations in the data set", message=FALSE, warning=FALSE}
+str(head(temperature_anomaly,2))
+
+```
+
+The above information shows that the variable Entity is a character variable meanwhile the remaining four variables are all numeric
+
+
+
+# References
+United Nations. (2022). World population prospects - population division. https://population.un.org/wpp/ 
