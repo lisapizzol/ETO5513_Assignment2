@@ -1,0 +1,25 @@
+---
+title: "Assignment 2 - Team Project"
+author: "Lisa Pizzol and Blake Ellison"
+date: "`r Sys.Date()`"
+output:
+  bookdown::html_document2
+---
+
+
+```{r Section 1, message=FALSE, warning=FALSE, include=FALSE}
+#Loading Libraries
+library(rmarkdown)
+library(bookdown)
+library(knitr)
+library(tidyverse)
+library(readxl)
+library(kableExtra)
+library(plotly)
+
+# read in data and basic tidy
+population_raw <- read_excel("Data/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1 (1).xlsx")
+colnames(population_raw)<-population_raw[12,]
+population <- population_raw[-c(1:12),] 
+
+```
