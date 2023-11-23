@@ -25,12 +25,9 @@ population <- population_raw[-c(1:12),]
 ```
 
 
-# Section 1 - World and Continent Population Changes
+# - World and Continent Population Changes
 ### Data Description
-The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in \@ref(tab:data2) have been used in this Section 1 of this assignment. 
-
-
-
+The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in \@ref(tab:data2) have been used in Section 1 of this assignment. 
 
 ```{r data1, message=FALSE, warning=FALSE, include=FALSE}
 pop1<-select(population,c(3,9,11,12,13) ) %>%
@@ -42,35 +39,17 @@ pop1$`Total Population, as of 1 July (thousands)`<-as.numeric(pop1$`Total Popula
 ```
 
 
-STILL NEEDS TO BE FINISHED!!!!
-The variable Entity contains categorical information of either Global, Northern Hemisphere or Southern Hemisphere, meanwhile the variable year contains values from 1850 to 2023. All other variables are described in Table \@ref(tab:data). 
-
-
 ```{r data2, echo=TRUE, message=FALSE, warning=FALSE}
+names_data<-(names(pop1))
+data_type = c("Categorical","Categorical","Numerical","Numerical","Numerical")
+further_information = c("Contains the following categories: World, Africa, Asia, Europe, Latin America and the Caribbean, Northern America, and Oceania.", "Contains the following information: World and Region","Contains years from 1950 to 2021", "Contains the population number in Thousands as of Janurary", "Contains the population number in Thousands as of July")
+names_data_final<-cbind(names_data,data_type,further_information)
 # table of variable names
-kable(names(temperature_anomaly),caption = "Variable Names", col.names = 'Names') %>%
+kable(names_data_final,caption = "Variable Names", col.names = c('Names','Data Type','Further Information')) %>%
   kable_styling()
 ```
 
-# Data set Description
-The data set contains `r ncol(temperature_anomaly)` variables as outlined in Section \@ref(refsection) - Data set Introduction above and `r nrow(temperature_anomaly)` observations.
-The inline code for the previous sentence can be seen below in Figure \@ref(fig:data2).
-
-
-```{r data2, echo=TRUE, fig.cap="Image of the inline code for data description", message=FALSE, warning=FALSE}
-# show image of inline code
-include_graphics("Image/Description_size_of_data.png")
-```
-
-The variable types for the first two observations in the data set are displayed below.
-
-
-```{r data3, echo=TRUE, fig.cap="Variable types for the first two observations in the data set", message=FALSE, warning=FALSE}
-str(head(temperature_anomaly,2))
-
-```
-
-The above information shows that the variable Entity is a character variable meanwhile the remaining four variables are all numeric
+This filtered data set contains `r ncol(pop1)` variables an outline of the variable types and information is presented above in Table \@ref(tab:data2). There are `r nrow(pop1)` observations in this filtered data set. 
 
 
 
