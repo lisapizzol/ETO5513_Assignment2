@@ -572,17 +572,21 @@ display: none;
 <h1><span class="header-section-number">1</span> - World and Continent Population Changes</h1>
 <div id="data-description" class="section level3" number="1.0.1">
 <h3><span class="header-section-number">1.0.1</span> Data Description</h3>
-<p>The data used in this section of the assignment is from the United Nations, 2022, and can be found at <a href="https://population.un.org/wpp/">World population prospects - population division</a>. It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in <a href="#tab:data2">1.1</a> have been used in Section 1 of this assignment.</p>
-<pre class="r"><code>names_data&lt;-(names(pop1))
+<p>The data used in this section of the assignment is from the United Nations, 2022, and can be found at <a href="https://population.un.org/wpp/">World population prospects - population division</a>. It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in <a href="#tab:data2">1.1</a> have been used in this section of the assignment.</p>
+<pre class="r"><code># create list of variables
+names_data&lt;-(names(pop1))
+# create list of data types
 data_type = c(&quot;Categorical&quot;,&quot;Categorical&quot;,&quot;Numerical&quot;,&quot;Numerical&quot;,&quot;Numerical&quot;)
+# create list of detailed information
 further_information = c(&quot;Contains the following categories: World, Africa, Asia, Europe, Latin America and the Caribbean, Northern America, and Oceania.&quot;, &quot;Contains the following information: World and Region&quot;,&quot;Contains years from 1950 to 2021&quot;, &quot;Contains the population number in Thousands as of Janurary&quot;, &quot;Contains the population number in Thousands as of July&quot;)
+#join datasets together
 names_data_final&lt;-cbind(names_data,data_type,further_information)
-# table of variable names
-kable(names_data_final,caption = &quot;Variable Names&quot;, col.names = c(&#39;Names&#39;,&#39;Data Type&#39;,&#39;Further Information&#39;)) %&gt;%
+# table of variable information, including column names and capition for table
+kable(names_data_final,caption = &quot;Variable Information&quot;, col.names = c(&#39;Names&#39;,&#39;Data Type&#39;,&#39;Further Information&#39;)) %&gt;%
   kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:data2">Table 1.1: </span>Variable Names
+<span id="tab:data2">Table 1.1: </span>Variable Information
 </caption>
 <thead>
 <tr>
@@ -656,6 +660,9 @@ Contains the population number in Thousands as of July
 </tbody>
 </table>
 <p>This filtered data set contains 5 variables an outline of the variable types and information is presented above in Table <a href="#tab:data2">1.1</a>. There are 504 observations in this filtered data set.</p>
+</div>
+<div id="section" class="section level3" number="1.0.2">
+<h3><span class="header-section-number">1.0.2</span> </h3>
 </div>
 </div>
 <div id="references" class="section level1" number="2">
