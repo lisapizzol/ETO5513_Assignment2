@@ -11,7 +11,7 @@
 
 <meta name="author" content="Lisa Pizzol and Blake Ellison" />
 
-<meta name="date" content="2023-11-24" />
+<meta name="date" content="2023-11-27" />
 
 <title>Assignment 2 - Team Project</title>
 
@@ -563,15 +563,15 @@ display: none;
 
 <h1 class="title toc-ignore">Assignment 2 - Team Project</h1>
 <h4 class="author">Lisa Pizzol and Blake Ellison</h4>
-<h4 class="date">2023-11-24</h4>
+<h4 class="date">2023-11-27</h4>
 
 </div>
 
 
 <div id="world-and-continent-population-changes" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> - World and Continent Population Changes</h1>
-<div id="data-description" class="section level3" number="1.0.1">
-<h3><span class="header-section-number">1.0.1</span> Data Description</h3>
+<div id="data-description" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Data Description</h2>
 <p>The data used in this section of the assignment is from the United Nations, 2022, and can be found at <a href="https://population.un.org/wpp/">World population prospects - population division</a>. It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in <a href="#tab:data2">1.1</a> have been used in this section of the assignment.</p>
 <pre class="r"><code># create list of variables
 names_data&lt;-(names(pop1))
@@ -659,10 +659,140 @@ Contains the population number in Thousands as of July
 </tr>
 </tbody>
 </table>
-<p>This filtered data set contains 5 variables an outline of the variable types and information is presented above in Table <a href="#tab:data2">1.1</a>. There are 504 observations in this filtered data set.</p>
+<p>This filtered data set contains 5 variables. An outline of the variable types and information is presented above in Table <a href="#tab:data2">1.1</a>. There are 504 observations in this filtered data set.</p>
 </div>
-<div id="section" class="section level3" number="1.0.2">
-<h3><span class="header-section-number">1.0.2</span> </h3>
+<div id="relative-changes-in-population" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Relative Changes in Population</h2>
+<p>Table <a href="#tab:data3">1.2</a> shows the January population (in thousands) for the entire World and the regions in 1950 and 2021. It than presents the relative population change between these two years as a percentage.</p>
+<pre class="r"><code>relative_diff&lt;-filter(pop1,Year %in% c(1950,2021)) %&gt;%
+  select(-&#39;Total Population, as of 1 July (thousands)&#39;,-Type) %&gt;%
+  pivot_wider(names_from = Year,values_from = &#39;Total Population, as of 1 January (thousands)&#39;) %&gt;%
+  mutate(&#39;Relative Difference (%)&#39;= ((`2021`-`1950`)/`1950`)*100)
+
+kable(relative_diff,caption = &quot;Relative Difference of the World and Region poulations from 1950 to 2021&quot;, digits = 0) %&gt;%
+  kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:data3">Table 1.2: </span>Relative Difference of the World and Region poulations from 1950 to 2021
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Region, subregion, country or area *
+</th>
+<th style="text-align:right;">
+1950
+</th>
+<th style="text-align:right;">
+2021
+</th>
+<th style="text-align:right;">
+Relative Difference (%)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+WORLD
+</td>
+<td style="text-align:right;">
+2477675
+</td>
+<td style="text-align:right;">
+7876932
+</td>
+<td style="text-align:right;">
+218
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AFRICA
+</td>
+<td style="text-align:right;">
+225120
+</td>
+<td style="text-align:right;">
+1377285
+</td>
+<td style="text-align:right;">
+512
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ASIA
+</td>
+<td style="text-align:right;">
+1365953
+</td>
+<td style="text-align:right;">
+4680790
+</td>
+<td style="text-align:right;">
+243
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EUROPE
+</td>
+<td style="text-align:right;">
+547304
+</td>
+<td style="text-align:right;">
+745853
+</td>
+<td style="text-align:right;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LATIN AMERICA AND THE CARIBBEAN
+</td>
+<td style="text-align:right;">
+166137
+</td>
+<td style="text-align:right;">
+654148
+</td>
+<td style="text-align:right;">
+294
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NORTHERN AMERICA
+</td>
+<td style="text-align:right;">
+160754
+</td>
+<td style="text-align:right;">
+374641
+</td>
+<td style="text-align:right;">
+133
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OCEANIA
+</td>
+<td style="text-align:right;">
+12406
+</td>
+<td style="text-align:right;">
+44215
+</td>
+<td style="text-align:right;">
+256
+</td>
+</tr>
+</tbody>
+</table>
+<p>In Table <a href="#tab:data3">1.2</a> it is observed that the Worlds Relative Population Change between 1950 and 2021 is 218%, which means the population has more than doubled in the last 70 years. The table also indicates that the region with the greatest increase in population is Africa. There has been a Relative Population Change of 512% in Africa, meanwhile the region with the lowest increase is Europe with only a 36% increase. While not explored in this assignment, further research could be undertaken to unpack the wealth of people living in these regions, as this may be help gain insight to the resource support required in these regions.</p>
 </div>
 </div>
 <div id="references" class="section level1" number="2">

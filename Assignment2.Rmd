@@ -26,12 +26,14 @@ population <- population_raw[-c(1:12),]
 
 
 # - World and Continent Population Changes
-### Data Description
+## Data Description
 The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in \@ref(tab:data2) have been used in this section of the assignment. 
 
 ```{r data1, message=FALSE, warning=FALSE, include=FALSE}
+# select only relatvent columns and rows
 pop1<-select(population,c(3,9,11,12,13) ) %>%
   filter(Type %in% c("World","Region"))
+# change column type to numeric 
 pop1$Year<-as.numeric(pop1$Year)
 pop1$`Total Population, as of 1 January (thousands)`<-as.numeric(pop1$`Total Population, as of 1 January (thousands)`)
 pop1$`Total Population, as of 1 July (thousands)`<-as.numeric(pop1$`Total Population, as of 1 July (thousands)`)
@@ -53,9 +55,22 @@ kable(names_data_final,caption = "Variable Information", col.names = c('Names','
   kable_styling()
 ```
 
-This filtered data set contains `r ncol(pop1)` variables an outline of the variable types and information is presented above in Table \@ref(tab:data2). There are `r nrow(pop1)` observations in this filtered data set. 
+This filtered data set contains `r ncol(pop1)` variables. An outline of the variable types and information is presented above in Table \@ref(tab:data2). There are `r nrow(pop1)` observations in this filtered data set. 
 
-###
+## Relative Changes in Population
+Table \@ref(tab:data3) shows the January population (in thousands) for the entire World and the regions in 1950 and 2021. It than presents the relative population change between these two years as a percentage.
+
+```{r data3, echo=TRUE, message=FALSE, warning=FALSE}
+relative_diff<-filter(pop1,Year %in% c(1950,2021)) %>%
+  select(-'Total Population, as of 1 July (thousands)',-Type) %>%
+  pivot_wider(names_from = Year,values_from = 'Total Population, as of 1 January (thousands)') %>%
+  mutate('Relative Difference (%)'= ((`2021`-`1950`)/`1950`)*100)
+
+kable(relative_diff,caption = "Relative Difference of the World and Region poulations from 1950 to 2021", digits = 0) %>%
+  kable_styling()
+```
+
+In Table \@ref(tab:data3) it is observed that the Worlds Relative Population Change between 1950 and 2021 is 218%, which means the population has more than doubled in the last 70 years. The table also indicates that the region with the greatest increase in population is Africa. There has been a Relative Population Change of 512% in Africa, meanwhile the region with the lowest increase is Europe with only a 36% increase. While not explored in this assignment, further research could be undertaken to unpack the wealth of people living in these regions, as this may be help gain insight to the resource support required in these regions. 
 
 # References
 United Nations. (2022). World population prospects - population division. https://population.un.org/wpp/ 
