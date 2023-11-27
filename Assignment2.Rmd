@@ -71,10 +71,10 @@ kable(relative_diff,caption = "Relative Difference of the World and Region poula
   kable_styling()
 ```
 
-In Table \@ref(tab:data3) it is observed that the Worlds Relative Population Change between 1950 and 2021 is 218%, which means the population has more than doubled in the last 70 years. The table also indicates that the region with the greatest increase in population is Africa. There has been a Relative Population Change of 512% in Africa, meanwhile the region with the lowest increase is Europe with only a 36% increase. While not explored in this assignment, further research could be undertaken to unpack the wealth of people living in these regions, as this may be help gain insight to the resource support required in these regions. 
+In Table \@ref(tab:data3) it is observed that the Worlds Relative Population Change between 1950 and 2021 is 218%, which means the population has more than doubled in the last 70 years. The table also indicates that the region with the greatest increase in population is Africa. There has been a Relative Population Change of 512% in Africa, meanwhile the region with the lowest increase is Europe with only a 36% increase. While not explored in this assignment, further research could be undertaken to unpack the wealth of people living in these regions, as this may gain insight in the resource support required in these regions. 
 
 ## World Population Growth between 1950 and 2021
-Figure \@ref(fig:data4) shows the World population from 1950 to 2021. 
+Figure \@ref(fig:data4) shows the World population from 1950 to 2021. In blue is the population values at each year, while in orange is the linear line of best fit which matches these values.
 
 ```{r data4, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The World Population in January (measured in thousands) from 1950 to 2021",out.width='100%',out.height='100%'}
 # get world data only
@@ -92,11 +92,50 @@ p<-ggplot(world,aes(x=Year, y=Population))+geom_point(color="#2375b3")+
   labs(y="World Population Values in January (measured in thousands)")+
   # change scale numbers from scientific to numeric
   scale_y_continuous(labels = label_number())
+p
+```
+From Figure \@ref(fig:data4) it is observed that the World Population has steadily increased over time from 1950 to 2021. This increase appears to be relatively linear, with the population values being slightly above the line of best fit in the 1950s and from 2010 on wards, this does indicate that rate of increase was slightly faster during these decades. 
+
+## Population Growth in the Regions from 1950 to 2021
+Figure \@ref(fig:data5) shows the population numbers in thousands in the regions from January 1950 to January 2021. All regions have the population values shown and a line of best fit for their values.
+
+```{r data5, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The Region Populations in January (measured in thousands) from 1950 to 2021",out.width='100%',fig.height=12.5}
+# get world data only
+region<-filter(pop1, Type == 'Region') 
+# change column names 
+colnames(region)[4] = "Population"
+colnames(region)[1] = "Region"
+
+# graph a scatter graph
+p<-ggplot(region,aes(x=Year, y=Population, color= Region))+geom_point()+
+  # add line of best fit
+  geom_smooth(method = 'lm', se = FALSE)+
+  # show axis line clearly
+  theme(axis.line = element_line(linetype = 'solid'))+
+  # change y-axis label
+  labs(y="Region Population Values in January (measured in thousands)")+
+  # change scale numbers from scientific to numeric
+  scale_y_continuous(labels = label_number())+
+  facet_wrap(~Region, scales ="free_y",ncol=2)
 # add hover over for further information
-pp<-ggplotly(p) 
+pp<-ggplotly(p) %>%
+  # change position of legend
+  layout(legend=list(orientation='h'))
 pp
 ```
-From Figure \@ref(fig:data4 it is observed that the World Population has steadily increased over time from 1950 to 2021. This increase appears to be relatively linear and consistent 
+
+Figure \@ref(fig:data5) graphs the regions on separate axes due to the large variation in populations sizes (these values can be seen in Table \@ref(tab:data3) for comparison). **Note:** the y-axis has different scales as a result of this. 
+
+An increase in population across all regions is observed in Figure \@ref(fig:data5), however the following further observations are also seen:
+
+- **Africa** - the population does not follow a linear regression line and instead appears to be growing exponentially.
+- **Asia** - the population does follow a linear regression from 1960 on wards but before this time the population numbers where higher than the linear regression line.
+- **Europe** - does not follow a standard linear regression although between 1950 until the early 1990's data appears to be linear. From the 1990s a decline in growth is observed until the late 2000's when a smaller rate of increase in population is observed again.
+- **Latin American and the Caribbean** - the population follows a linear regression except in the early 1950s where the population is higher than the linear regression line.
+- **Northern America** - the population follows a regression line with a slight deviation from this line in the late 1980s to the early 1990s. The population is slightly lower than the regression line during this time.
+- **Oceania** - does not appear to follow the regression line and could be closer to exponential growth or polynomial growth.
+
+All of the above observations a made by visually comparing the individual regions to their linear regression lines further analysis of the type of regression was not conducted in this assignment to confirm the exact type of regression. 
 
 # References
 United Nations. (2022). World population prospects - population division. https://population.un.org/wpp/ 
