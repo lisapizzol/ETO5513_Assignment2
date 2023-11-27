@@ -16,6 +16,7 @@ library(tidyverse)
 library(readxl)
 library(kableExtra)
 library(plotly)
+library(scales)
 
 # read in data and basic tidy
 population_raw <- read_excel("Data/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1 (1).xlsx")
@@ -29,14 +30,15 @@ population <- population_raw[-c(1:12),]
 ## Data Description
 The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or areas from 1950 to 2021. Only the following selected variables listed in \@ref(tab:data2) have been used in this section of the assignment. 
 
+**Note:** the original data set contained population values in January and July. Only January data has been chosen the same analysis could be completed with July data but was not done in this assignment. 
+
 ```{r data1, message=FALSE, warning=FALSE, include=FALSE}
 # select only relatvent columns and rows
-pop1<-select(population,c(3,9,11,12,13) ) %>%
+pop1<-select(population,c(3,9,11,12) ) %>%
   filter(Type %in% c("World","Region"))
 # change column type to numeric 
 pop1$Year<-as.numeric(pop1$Year)
 pop1$`Total Population, as of 1 January (thousands)`<-as.numeric(pop1$`Total Population, as of 1 January (thousands)`)
-pop1$`Total Population, as of 1 July (thousands)`<-as.numeric(pop1$`Total Population, as of 1 July (thousands)`)
 
 ```
 
@@ -45,9 +47,9 @@ pop1$`Total Population, as of 1 July (thousands)`<-as.numeric(pop1$`Total Popula
 # create list of variables
 names_data<-(names(pop1))
 # create list of data types
-data_type = c("Categorical","Categorical","Numerical","Numerical","Numerical")
+data_type = c("Categorical","Categorical","Numerical","Numerical")
 # create list of detailed information
-further_information = c("Contains the following categories: World, Africa, Asia, Europe, Latin America and the Caribbean, Northern America, and Oceania.", "Contains the following information: World and Region","Contains years from 1950 to 2021", "Contains the population number in Thousands as of Janurary", "Contains the population number in Thousands as of July")
+further_information = c("Contains the following categories: World, Africa, Asia, Europe, Latin America and the Caribbean, Northern America, and Oceania.", "Contains the following information: World and Region","Contains years from 1950 to 2021", "Contains the population number in Thousands as of Janurary")
 #join datasets together
 names_data_final<-cbind(names_data,data_type,further_information)
 # table of variable information, including column names and capition for table
@@ -62,7 +64,6 @@ Table \@ref(tab:data3) shows the January population (in thousands) for the entir
 
 ```{r data3, echo=TRUE, message=FALSE, warning=FALSE}
 relative_diff<-filter(pop1,Year %in% c(1950,2021)) %>%
-  select(-'Total Population, as of 1 July (thousands)',-Type) %>%
   pivot_wider(names_from = Year,values_from = 'Total Population, as of 1 January (thousands)') %>%
   mutate('Relative Difference (%)'= ((`2021`-`1950`)/`1950`)*100)
 
@@ -71,6 +72,31 @@ kable(relative_diff,caption = "Relative Difference of the World and Region poula
 ```
 
 In Table \@ref(tab:data3) it is observed that the Worlds Relative Population Change between 1950 and 2021 is 218%, which means the population has more than doubled in the last 70 years. The table also indicates that the region with the greatest increase in population is Africa. There has been a Relative Population Change of 512% in Africa, meanwhile the region with the lowest increase is Europe with only a 36% increase. While not explored in this assignment, further research could be undertaken to unpack the wealth of people living in these regions, as this may be help gain insight to the resource support required in these regions. 
+
+## World Population Growth between 1950 and 2021
+Figure \@ref(fig:data4) shows the World population from 1950 to 2021. 
+
+```{r data4, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The World Population in January (measured in thousands) from 1950 to 2021",out.width='100%',out.height='100%'}
+# get world data only
+world<-filter(pop1, Type == 'World') 
+# change column names 
+colnames(world)[4] = "Population"
+
+# graph a scatter graph
+p<-ggplot(world,aes(x=Year, y=Population))+geom_point(color="#2375b3")+
+  # add line of best fit
+  geom_smooth(method = 'lm', se = FALSE,color = "#b36123")+
+  # show axis line clearly
+  theme(axis.line = element_line(linetype = 'solid'))+
+  # change y-axis label
+  labs(y="World Population Values in January (measured in thousands)")+
+  # change scale numbers from scientific to numeric
+  scale_y_continuous(labels = label_number())
+# add hover over for further information
+pp<-ggplotly(p) 
+pp
+```
+From Figure \@ref(fig:data4 it is observed that the World Population has steadily increased over time from 1950 to 2021. This increase appears to be relatively linear and consistent 
 
 # References
 United Nations. (2022). World population prospects - population division. https://population.un.org/wpp/ 
