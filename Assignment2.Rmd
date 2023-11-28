@@ -180,7 +180,7 @@ sex1<-select(population,c(3,9,11,12,14,15,17) ) %>%
 
 sex1<-sex1[-c(4)]
 
-# Rename columns for ease
+# Rename columns for ease of use
 colnames(sex1)[1] = "Area"
 colnames(sex1)[4] = "Male_Pop_Thousands"
 colnames(sex1)[5] = "Female_Pop_Thousands"
