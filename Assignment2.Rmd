@@ -16,6 +16,7 @@ library(tidyverse)
 library(readxl)
 library(kableExtra)
 library(plotly)
+library(scales)
 
 # read in data and basic tidy
 population_raw <- read_excel("Data/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1 (1).xlsx")
@@ -25,5 +26,135 @@ population <- population_raw[-c(1:12),]
 ```
 
 
-# References
-United Nations. (2022). World population prospects - population division. https://population.un.org/wpp/ 
+# - World and Continent Population Changes
+## Data Description
+The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 1.1 have been used in this section of the assignment. 
+
+**Note:** the original data set contained population values in January and July. Only January data has been chosen the same analysis could be completed with July data but was not done in this assignment. 
+
+```{r data1, echo=TRUE, message=FALSE, warning=FALSE}
+# select only relevant columns and rows
+pop1<-select(population,c(3,9,11,12) ) %>%
+  filter(Type %in% c("World","Region"))
+
+# change column types to numerical 
+pop1$Year<-as.numeric(pop1$Year)
+pop1$`Total Population, as of 1 January (thousands)`<-as.numeric(pop1$`Total Population, as of 1 January (thousands)`)
+
+```
+
+
+```{r data2, echo=TRUE, message=FALSE, warning=FALSE}
+# create list of variables
+names_data<-(names(pop1))
+
+# create list of data types
+data_type = c("Categorical","Categorical","Numerical","Numerical")
+
+# create list of detailed information
+further_information = c("Contains the following categories: World, Africa, Asia, Europe, Latin America and the Caribbean, Northern America, and Oceania.", "Contains the following information: World and Region","Contains years from 1950 to 2021", "Contains the population number in Thousands as of January")
+
+#join data sets together
+names_data_final<-cbind(names_data,data_type,further_information)
+
+# table of variable information, including column names and caption for table
+kable(names_data_final,caption = "Variable Information.", col.names = c('Names','Data Type','Further Information')) %>%
+  kable_styling()
+```
+
+This filtered data set contains `r ncol(pop1)` variables. An outline of the variable types and information is presented above in Table 1.1. There are `r nrow(pop1)` observations in this filtered data set. 
+
+## Relative Changes in Population
+Table 1.2 shows the January population (in thousands) for the World and the Regions in 1950 and 2021. It than presents the Relative Population Change between these two years as a percentage.
+
+```{r data3, echo=TRUE, message=FALSE, warning=FALSE}
+# creating data set including relative difference
+relative_diff<-filter(pop1,Year %in% c(1950,2021)) %>%
+  pivot_wider(names_from = Year,values_from = 'Total Population, as of 1 January (thousands)') %>%
+  mutate('Relative Difference (%)'= ((`2021`-`1950`)/`1950`)*100)
+
+# creating table of relative difference data
+kable(relative_diff,caption = "Relative Population Change of the World and Region populations from 1950 to 2021.", digits = 0) %>%
+  kable_styling()
+```
+
+In Table 1.2 it is observed that the Worlds Relative Population Change between 1950 and 2021 is 218%, which means the population has more than doubled in the last 70 years. The table also indicates that all regions have had an increases too. However, the region with the greatest population change is Africa, this relative change has seen an increase of 512%. Meanwhile the region with the lowest Relative Population Change is Europe with an increase of only 36%. The reason for these changes was not explored but understanding these gains in population help to ensure appropriate resourcing occurs in these regions now and into the future. 
+
+## World Population Growth between 1950 and 2021
+Figure 1.1 shows the World population from 1950 to 2021. In blue is the population values at each year, while in orange is a linear regression line for this data.
+
+```{r data4, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The World Population in January (measured in thousands) from 1950 to 2021.",out.width='100%',out.height='100%'}
+
+# filter for world data only
+world<-filter(pop1, Type == 'World') 
+
+# change column names to make graphing easier 
+colnames(world)[4] = "Population"
+
+# graph a scatter graph with regression line
+p<-ggplot(world,aes(x=Year, y=Population))+geom_point(color="#2375b3")+
+  
+  # add regression line
+  geom_smooth(method = 'lm', se = FALSE,color = "#b36123")+
+  
+  # show axis line clearly
+  theme(axis.line = element_line(linetype = 'solid'))+
+  # change y-axis label
+  labs(y="World Population Values in January (measured in thousands)")+
+  # change y scale numbers from scientific to numeric
+  scale_y_continuous(labels = label_number())
+
+# add hover over and ensure graph is displayed
+pp <- ggplotly(p) 
+pp
+```
+From Figure 1.1 it is observed that the World Population has steadily increased over time from 1950 to 2021. This increase shows a linear trend, with the population values being slightly above the regression line in the 1950s and from 2010 onwards, indicating the rate of increase in the population was slightly faster than a linear increase during these decades. 
+
+## Population Growth in the Regions from 1950 to 2021
+Figure 1.2 shows the population numbers in thousands in the regions from January 1950 to January 2021. All regions have the population values shown and a linear regression line (in black) for their population data.
+
+```{r data5, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The Region Populations in January (measured in thousands) from 1950 to 2021.",out.width='100%',fig.height=12.5}
+
+# get world data only
+region<-filter(pop1, Type == 'Region') 
+
+# change column names 
+colnames(region)[4] = "Population"
+colnames(region)[1] = "Region"
+
+# graph a scatter graph including regression line
+p<-ggplot(region,aes(x=Year, y=Population, color= Region))+geom_line(size=1.5)+
+  
+  # add linear regression line
+  geom_smooth(method = 'lm', se = FALSE, colour = '#353935',size =0.5)+
+  
+  # show axis line clearly
+  theme(axis.line = element_line(linetype = 'solid'))+
+  # change y-axis label
+  labs(y="Region Population Values in January (measured in thousands)")+
+  # change y scale numbers from scientific to numeric
+  scale_y_continuous(labels = label_number())+
+  
+  # graph each region on a separate graph, ensure y-scale is free
+  facet_wrap(~Region, scales ="free",ncol=2)
+
+# add hover over for further information and ensure graph is displayed
+pp<-ggplotly(p) %>%
+  
+  # change position of legend
+  layout(legend=list(orientation='h'))
+pp
+```
+
+Figure 1.2 graphs the regions on separate axes due to the large variation in population sizes (these sizes can be seen in Table \@ref(tab:data3) for comparison). **Note:** the y-axis has different scales as a result of this. 
+
+An increase in population across all regions is observed in Figure 1.2, however the following further observations are also seen:
+
+- **Africa** - the population does not follow a linear regression line and instead appears to be growing exponentially.
+- **Asia** - the population does follow a linear regression from 1960 onwards but before this time the population numbers where higher than the linear regression line.
+- **Europe** - does not follow a standard linear regression although the region has shown an increase in population since the 1950s. From the 1990s a halt in growth is observed until the late 2000's when a small rate of increase in population is observed again.
+- **Latin American and the Caribbean** - the population follows a linear regression except in the early 1950s where the population is higher than the linear regression line.
+- **Northern America** - the population follows a regression line with a slight deviation from this line in the late 1980s to the early 1990s. The population is slightly lower than the regression line during this time.
+- **Oceania** - does not appear to follow the linear regression line and could be closer to exponential growth or polynomial growth.
+
+All of the above observations are made by visually comparing the individual regions to their linear regression lines further analysis of the type of regression was not conducted in this assignment to confirm the exact type of regression. From the above observations it can be concluded that steady linear growth has occurred in Asia; Latin America and the Caribbean; and North America in the past 70 years. Meanwhile, there has been a decline in the rate of population growth in Europe during the same time period. Finally, in Africa and Oceania the rate of growth has been faster with it appearing the exponential and/or polynomial.
