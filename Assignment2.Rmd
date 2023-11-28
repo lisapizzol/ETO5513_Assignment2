@@ -20,7 +20,9 @@ library(scales)
 
 # read in data and basic tidy
 population_raw <- read_excel("Data/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1 (1).xlsx")
+
 colnames(population_raw)<-population_raw[12,]
+
 population <- population_raw[-c(1:12),] 
 
 ```
@@ -30,7 +32,9 @@ population <- population_raw[-c(1:12),]
 ## Data Description
 The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 1.1 have been used in this section of the assignment. 
 
-**Note:** the original data set contained population values in January and July. Only January data has been chosen the same analysis could be completed with July data but was not done in this assignment. 
+<!-- **Note:** the original data set contained population values in January and July. Only January data has been chosen the same analysis could be completed with July data but was not done in this assignment. 
+
+Can we edit this as I'm going to use the July data for my half just to use a broader example-->
 
 ```{r data1, echo=TRUE, message=FALSE, warning=FALSE}
 # select only relevant columns and rows
@@ -158,3 +162,35 @@ An increase in population across all regions is observed in Figure 1.2, however 
 - **Oceania** - does not appear to follow the linear regression line and could be closer to exponential growth or polynomial growth.
 
 All of the above observations are made by visually comparing the individual regions to their linear regression lines further analysis of the type of regression was not conducted in this assignment to confirm the exact type of regression. From the above observations it can be concluded that steady linear growth has occurred in Asia; Latin America and the Caribbean; and North America in the past 70 years. Meanwhile, there has been a decline in the rate of population growth in Europe during the same time period. Finally, in Africa and Oceania the rate of growth has been faster with it appearing the exponential and/or polynomial.
+
+# Changes in Sex Proportions Across the Continents and Globe:
+
+## Data Description:
+
+<!-- As per the previous paragraphs on the data description above, maybe we should merge this into the introduction as it covers both parts?
+
+I'm also going to use the july data, just to be a bit different from yours. -->
+
+```{r data1, echo=TRUE, message=FALSE, warning=FALSE}
+# select only relevant columns and rows for sex comparisons, original data from Lisa pull
+# Filter for World and Continents
+
+sex1<-select(population,c(3,9,11,12,14,15,17) ) %>%
+  filter(Type %in% c("World","Region"))
+
+sex1<-sex1[-c(4)]
+
+# Rename columns for ease
+colnames(sex1)[1] = "Area"
+colnames(sex1)[4] = "Male_Pop_Thousands"
+colnames(sex1)[5] = "Female_Pop_Thousands"
+colnames(sex1)[6] = "Sex_Ratio"
+
+
+head(sex1)
+
+
+unique_areas <- unique(sex1$Area)
+print(unique_areas)
+```
+
