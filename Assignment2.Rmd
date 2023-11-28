@@ -26,6 +26,7 @@ population <- population_raw[-c(1:12),]
 ```
 
 
+<<<<<<< HEAD
 # - World and Continent Population Changes
 ## Data Description
 The data used in this section of the assignment is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 1.1 have been used in this section of the assignment. 
@@ -159,5 +160,7 @@ An increase in population across all regions is observed in Figure 1.2, however 
 
 All of the above observations are made by visually comparing the individual regions to their linear regression lines further analysis of the type of regression was not conducted in this assignment to confirm the exact type of regression. From the above observations it can be concluded that steady linear growth has occurred in Asia; Latin America and the Caribbean; and North America in the past 70 years. Meanwhile, there has been a decline in the rate of population growth in Europe during the same time period. Finally, in Africa and Oceania the rate of growth has been faster with it appearing the exponential and/or polynomial.
 
+=======
+>>>>>>> main
 # References
 United Nations. (2022). World population prospects - population division. https://population.un.org/wpp/ 
