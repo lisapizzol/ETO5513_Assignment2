@@ -223,29 +223,31 @@ Within this data set is `r ncol(sex1)` columns. Missing above is the 'Year' colu
 
 Figure 3.2 shows the World sexes distribution from 1950 to 2021.
 
-``` {r}
-# filter for world data only
+``` {r out.width='100%',fig.height=6}
+# Filter for world data only
 world <- filter(sex1, Type == 'World') 
 
 # Create plot
-p<-ggplot(data = world, aes(x = Year)) +
+p <- ggplot(data = world, aes(x = Year)) +
   
-  # Add blue line for males
-  geom_line(aes(y = Male_Pop_Thousands), colour = "#2768A4") +
+  # Add blue line for males and attach to legend
+  geom_line(aes(y = Male_Pop_Thousands, color = "Male"), show.legend = TRUE) +
   
-  #add pink line for females
-  geom_line(aes(y = Female_Pop_Thousands), colour = "#B85887") +
+  # Add pink line for females and put on the legend
+  geom_line(aes(y = Female_Pop_Thousands, color = "Female"), show.legend = TRUE) +
   
-  # chane the y label
-  labs(y="Population Count") + 
+  # Change the y label
+  labs(y = "Population Count") + 
   
   # Make axis lines solid
   theme(axis.line = element_line(linetype = 'solid')) + 
   
   # Make y scale continuous rather than scientific notation
-  scale_y_continuous(labels = label_number())
+  scale_y_continuous(labels = label_number()) +
+  
+  # Specify manual color scale and labels
+  scale_color_manual(values = c("#B85887", "#2768A4"), labels = c("Male", "Female"), name = "Gender")
 
 pp <- ggplotly(p) 
 pp
-  
 ```
