@@ -27,9 +27,7 @@ population <- population_raw[-c(1:12),]
 
 ```
 
-
-
-# Data Description
+# - Data Description:
 The data used is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 1.1 have been used in this assignment. 
 
 ```{r data1, echo=TRUE, message=FALSE, warning=FALSE}
@@ -60,8 +58,8 @@ kable(names_data_final,caption = "Variable Information.", col.names = c('Names',
 
 This filtered data set contains `r ncol(pop_descrip)` variables. An outline of the variable types and information is presented above in Table 1.1. There are `r nrow(pop_descrip)` observations in this filtered data set which contain population values for each year for Global and the Regions only. 
 
-# - World and Continent Population Changes
-## Relative Changes in Population
+# - World and Continent Population Changes:
+## Relative Changes in Population:
 Table 2.1 shows the  population (in thousands) for the World and the Regions in 1950 and 2021 and the Relative Population Change between these two years as a percentage.
 
 ```{r data3, echo=TRUE, message=FALSE, warning=FALSE}
@@ -78,6 +76,9 @@ relative_diff<-filter(pop1,Year %in% c(1950,2021)) %>%
   pivot_wider(names_from = Year,values_from = 'Total Population, as of 1 January (thousands)') %>%
   mutate('Relative Difference (%)'= ((`2021`-`1950`)/`1950`)*100)
 
+# Adjust to Title Case for table
+relative_diff$`Region, subregion, country or area *` <- str_to_title(relative_diff$`Region, subregion, country or area *`)
+
 # creating table of relative difference data
 kable(relative_diff,caption = "Relative Population Change of the World and Region populations from 1950 to 2021.", digits = 0) %>%
   kable_styling()
@@ -85,7 +86,7 @@ kable(relative_diff,caption = "Relative Population Change of the World and Regio
 
 From Table 2.1  the Worlds Relative Population Change between 1950 and 2021 is 218%. The table also indicates that all regions have had an increase too. The region with the greatest population change is Africa with an increase of 512%. Europe is the lowest region with an increase of 36%. 
 
-## World Population Growth between 1950 and 2021
+## World Population Growth between 1950 and 2021:
 Figure 2.1 shows the World population from 1950 to 2021. In blue is the population values at each year, while in orange is a linear regression line for this data.
 
 ```{r data4, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The World Population in January (measured in thousands) from 1950 to 2021.",out.width='100%',out.height='100%'}
@@ -115,12 +116,12 @@ pp
 ```
 In Figure 2.1 the World Population has a steady increase from 1950 to 2021. This increase is linear, with the population values being slightly above the regression line in the 1950s and from 2010 onwards.
 
-## Population Growth in the Regions from 1950 to 2021
+## Population Growth in the Regions from 1950 to 2021:
 Figure 2.2 shows the population numbers in thousands in the regions from 1950 to 2021. All regions have a linear regression fitted to their data in black. Each region has a different y-axis due to their varied population sizes.
 
 ```{r data5, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The Region Populations in January (measured in thousands) from 1950 to 2021.",out.width='100%',fig.height=12.5}
 
-# get world data only
+# get region data only
 region<-filter(pop1, Type == 'Region') 
 
 # change column names 
@@ -162,13 +163,9 @@ An increase in population across all regions is observed in Figure 2.2, however 
 Further analysis of the data for Africa, Europe and Oceania was not conducted to determine their actual regression type but could be an extension beyond this assignment. 
 
 
-# Changes in Sex Proportions Across the Continents and Globe:
+# - Changes in Sex Proportions Across the Continents and World:
 
-## Data Description:
-
-<!-- As per the previous paragraphs on the data description above, maybe we should merge this into the introduction as it covers both parts?
-
-I'm also going to use the july data, just to be a bit different from yours. -->
+Table 3.1 shows the population of the sexes (in thousands) across multiple continents and the World. Listed is both the raw numbers of Male and Female in 1000s as well as the ratio of Male to Female in a magnitude of Males to 100 Females.
 
 ```{r dataa, echo=TRUE, message=FALSE, warning=FALSE}
 # select only relevant columns and rows for sex comparisons, original data from Lisa pull
@@ -207,17 +204,48 @@ averages$Sex_Ratio<-round(averages$Sex_Ratio, digits = 2)
 # create a new data frame using the averages with the Area values
 averages_df <- data.frame(
   Region = averages$Area,
-  `Avg_Male_Pop` = averages$Male_Pop_Thousands,
-  `Avg_Female_Pop` = averages$Female_Pop_Thousands,
-  `Avg_Sex_Ratio` = averages$Sex_Ratio
+  `Avg_Male_Pop_Thousands` = averages$Male_Pop_Thousands,
+  `Avg_Female_Pop_Thousands` = averages$Female_Pop_Thousands,
+  `Males_Per_100_Female` = averages$Sex_Ratio
 )
 
 ```
-
 ``` {r INCLUDE=TRUE}
-print(averages_df)
 
+kable(averages_df,caption = "Male and Female Differences Across the Regions", digits = 0) %>%
+  kable_styling()
 
 ```
 
-Within this data set is `r ncol(sex1)` columns. There are `r nrow(sex1)` records in this  data set. Each row accounts for a single years' measurement for the associated region.
+Within this data set is `r ncol(sex1)` columns. Missing above is the 'Year' column. There are `r nrow(sex1)` records in this  data set. Each row accounts for a single years' measurement for the associated region.
+
+## - Changes Across the World:
+
+Figure 3.2 shows the World sexes distribution from 1950 to 2021.
+
+``` {r}
+# filter for world data only
+world <- filter(sex1, Type == 'World') 
+
+# Create plot
+p<-ggplot(data = world, aes(x = Year)) +
+  
+  # Add blue line for males
+  geom_line(aes(y = Male_Pop_Thousands), colour = "#2768A4") +
+  
+  #add pink line for females
+  geom_line(aes(y = Female_Pop_Thousands), colour = "#B85887") +
+  
+  # chane the y label
+  labs(y="Population Count") + 
+  
+  # Make axis lines solid
+  theme(axis.line = element_line(linetype = 'solid')) + 
+  
+  # Make y scale continuous rather than scientific notation
+  scale_y_continuous(labels = label_number())
+
+pp <- ggplotly(p) 
+pp
+  
+```
