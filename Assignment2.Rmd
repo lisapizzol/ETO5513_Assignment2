@@ -185,6 +185,11 @@ sex1$Year <- as.numeric(sex1$Year)
 sex1$Male_Pop_Thousands <- as.numeric(sex1$Male_Pop_Thousands)
 sex1$Female_Pop_Thousands <- as.numeric(sex1$Female_Pop_Thousands)
 sex1$Sex_Ratio <- as.numeric(sex1$Sex_Ratio)
+
+#transform to longform for plotting
+sex1_melted <- sex1 %>%
+  gather(Gender, Population, -Area, -Type, -Year, -Sex_Ratio) %>%
+  mutate(Gender = ifelse(Gender == "Male_Pop_Thousands", "Male", "Female"))
 ```
 
 ``` {r include=FALSE}
@@ -223,31 +228,64 @@ Within this data set is `r ncol(sex1)` columns. Missing above is the 'Year' colu
 
 Figure 3.2 shows the World sexes distribution from 1950 to 2021.
 
-``` {r out.width='100%',fig.height=6}
-# Filter for world data only
-world <- filter(sex1, Type == 'World') 
+``` {r out.width='100%', fig.height=3, echo=FALSE}
 
-# Create plot
-p <- ggplot(data = world, aes(x = Year)) +
-  
-  # Add blue line for males and attach to legend
-  geom_line(aes(y = Male_Pop_Thousands, color = "Male"), show.legend = TRUE) +
-  
-  # Add pink line for females and put on the legend
-  geom_line(aes(y = Female_Pop_Thousands, color = "Female"), show.legend = TRUE) +
-  
-  # Change the y label
-  labs(y = "Population Count") + 
-  
-  # Make axis lines solid
-  theme(axis.line = element_line(linetype = 'solid')) + 
-  
-  # Make y scale continuous rather than scientific notation
+#transform to longform for plotting
+sex1_melted <- sex1 %>%
+  gather(Gender, Population, -Area, -Type, -Year, -Sex_Ratio) %>%
+  mutate(Gender = ifelse(Gender == "Male_Pop_Thousands", "Male", "Female"))
+
+sex1_melted_filtered <- sex1_melted %>% 
+  filter(Area == 'World')
+
+p <- ggplot(data = sex1_melted_filtered, aes(x = Year, y = Population, color = Gender)) +
   scale_y_continuous(labels = label_number()) +
-  
-  # Specify manual color scale and labels
-  scale_color_manual(values = c("#B85887", "#2768A4"), labels = c("Male", "Female"), name = "Gender")
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Population")
 
-pp <- ggplotly(p) 
-pp
+fig1 <- ggplotly(p)
+fig1
+
+```
+
+``` {r out.width='105%', fig.height=3, echo=FALSE}
+q <- ggplot(data = sex1_melted_filtered, aes(x = Year, y = Sex_Ratio, lty = 'Sex Ratio')) +
+  geom_line(size = 1) + 
+  scale_linetype('Legend') +
+  scale_color_manual("black") +
+  labs(x = "Year", y = "Females per 100 Males")
+
+fig2 <- ggplotly(q)
+fig2
+```
+
+## - Changes Within the Continents:
+
+``` {r out.width='100%', fig.height=5, echo=FALSE}
+
+continent_filtered <- sex1_melted %>% 
+  filter(Area != 'World')
+
+r <- ggplot(data = continent_filtered, aes(x = Year, y = Population, color = Gender)) +
+  scale_y_continuous(labels = label_number()) +
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Population") +
+  facet_wrap(~ Area, nrow = 3, ncol = 2, scales = "free_y")
+
+fig3 <- ggplotly(r)
+fig3
+
+```
+
+``` {r echo=FALSE, out.width='110%', fig.height=5}
+
+
+S <- ggplot(data = continent_filtered, aes(x = Year, y = Sex_Ratio, color = Area)) +
+  geom_line(size = 0.6) + 
+  labs(x = "Year", y = "Females per 100 Males")
+
+fig4 <- ggplotly(S)
+fig4
+
+
 ```
