@@ -17,6 +17,7 @@ library(readxl)
 library(kableExtra)
 library(plotly)
 library(scales)
+library(vtable)
 
 # read in data and basic tidy
 population_raw <- read_excel("Data/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1 (1).xlsx")
@@ -167,7 +168,7 @@ Further analysis of the data for Africa, Europe and Oceania was not conducted to
 
 Table 3.1 shows the population of the sexes (in thousands) across multiple continents and the World. Listed is both the raw numbers of Male and Female in 1000s as well as the ratio of Male to Female in a magnitude of Males to 100 Females.
 
-```{r dataa, echo=TRUE, message=FALSE, warning=FALSE}
+```{r data_cleaning, echo=TRUE, message=FALSE, warning=FALSE}
 # select only relevant columns and rows for sex comparisons, original data from Lisa pull
 # Filter for World and Continents
 
@@ -186,19 +187,12 @@ sex1$Male_Pop_Thousands <- as.numeric(sex1$Male_Pop_Thousands)
 sex1$Female_Pop_Thousands <- as.numeric(sex1$Female_Pop_Thousands)
 sex1$Sex_Ratio <- as.numeric(sex1$Sex_Ratio)
 
-#transform to longform for plotting
-sex1_melted <- sex1 %>%
-  gather(Gender, Population, -Area, -Type, -Year, -Sex_Ratio) %>%
-  mutate(Gender = ifelse(Gender == "Male_Pop_Thousands", "Male", "Female"))
-```
-
-``` {r include=FALSE}
-
 # Change area label to title case
 sex1$Area <- str_to_title(sex1$Area)
+
 ```
 
-``` {r include=FALSE}
+``` {r first_table, include=FALSE}
 # Calculate the averages for each Area value
 averages <- aggregate(cbind(Male_Pop_Thousands, Female_Pop_Thousands, Sex_Ratio) ~ Area, data = sex1, FUN = mean)
 
@@ -211,15 +205,18 @@ averages_df <- data.frame(
   Region = averages$Area,
   `Avg_Male_Pop_Thousands` = averages$Male_Pop_Thousands,
   `Avg_Female_Pop_Thousands` = averages$Female_Pop_Thousands,
-  `Males_Per_100_Female` = averages$Sex_Ratio
-)
-
+  `Males_Per_100_Female` = averages$Sex_Ratio)
 ```
-``` {r INCLUDE=TRUE}
+
+``` {r echo=FALSE}
+sex2 <- sex1[-c(1,2)]
+st(sex2)
+```
+
+``` {r echo=FALSE}
 
 kable(averages_df,caption = "Male and Female Differences Across the Regions", digits = 0) %>%
   kable_styling()
-
 ```
 
 Within this data set is `r ncol(sex1)` columns. Missing above is the 'Year' column. There are `r nrow(sex1)` records in this  data set. Each row accounts for a single years' measurement for the associated region.
