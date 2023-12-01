@@ -30,7 +30,7 @@ population <- population_raw[-c(1:12),]
 # - Introduction:
 
 # - Data Description:
-The data used is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 1.1 have been used in this assignment. 
+The data used is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 2.1 have been used in this assignment. 
 
 ```{r data1, echo=TRUE, message=FALSE, warning=FALSE}
 # select only relevant columns and rows
@@ -58,11 +58,11 @@ kable(names_data_final,caption = "Variable Information.", col.names = c('Names',
   kable_styling()
 ```
 
-This filtered data set contains `r ncol(pop_descrip)` variables. An outline of the variable types and information is presented above in Table 1.1. There are `r nrow(pop_descrip)` observations in this filtered data set which contain population values for each year for Global and the Regions only. 
+This filtered data set contains `r ncol(pop_descrip)` variables. An outline of the variable types and information is presented above in Table 2.1. There are `r nrow(pop_descrip)` observations in this filtered data set which contain population values for each year for Global and the Regions only. 
 
 # - World and Continent Population Changes:
 ## Relative Changes in Population:
-Table 2.1 shows the  population (in thousands) for the World and the Regions in 1950 and 2021 and the Relative Population Change between these two years as a percentage.
+Table 3.1 shows the  population (in thousands) for the World and the Regions in 1950 and 2021 and the Relative Population Change between these two years as a percentage.
 
 ```{r data3, echo=TRUE, message=FALSE, warning=FALSE}
 # select only relevant columns and rows
@@ -86,10 +86,10 @@ kable(relative_diff,caption = "Relative Population Change of the World and Regio
   kable_styling()
 ```
 
-From Table 2.1  the Worlds Relative Population Change between 1950 and 2021 is 218%. The table also indicates that all regions have had an increase too. The region with the greatest population change is Africa with an increase of 512%. Europe is the lowest region with an increase of 36%. 
+From Table 3.1  the Worlds Relative Population Change between 1950 and 2021 is 218%. The table also indicates that all regions have had an increase too. The region with the greatest population change is Africa with an increase of 512%. Europe is the lowest region with an increase of 36%. 
 
 ## World Population Growth between 1950 and 2021:
-Figure 2.1 shows the World population from 1950 to 2021. In blue is the population values at each year, while in orange is a linear regression line for this data.
+Figure 3.1 shows the World population from 1950 to 2021. In blue is the population values at each year, while in orange is a linear regression line for this data.
 
 ```{r data4, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The World Population in January (measured in thousands) from 1950 to 2021.",out.width='100%',out.height='100%'}
 
@@ -116,10 +116,10 @@ p<-ggplot(world,aes(x=Year, y=Population))+geom_point(color="#2375b3")+
 pp <- ggplotly(p) 
 pp
 ```
-In Figure 2.1 the World Population has a steady increase from 1950 to 2021. This increase is linear, with the population values being slightly above the regression line in the 1950s and from 2010 onwards.
+In Figure 3.1 the World Population has a steady increase from 1950 to 2021. This increase is linear, with the population values being slightly above the regression line in the 1950s and from 2010 onwards.
 
 ## Population Growth in the Regions from 1950 to 2021:
-Figure 2.2 shows the population numbers in thousands in the regions from 1950 to 2021. All regions have a linear regression fitted to their data in black. Each region has a different y-axis due to their varied population sizes.
+Figure 4.2 shows the population numbers in thousands in the regions from 1950 to 2021. All regions have a linear regression fitted to their data in black. Each region has a different y-axis due to their varied population sizes.
 
 ```{r data5, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The Region Populations in January (measured in thousands) from 1950 to 2021.",out.width='100%',fig.height=12.5}
 
@@ -154,7 +154,7 @@ pp<-ggplotly(p) %>%
 pp
 ```
 
-An increase in population across all regions is observed in Figure 2.2, however the following further observations are also seen:
+An increase in population across all regions is observed in Figure 3.2, however the following further observations are also seen:
 
 - **Africa** - the population does not follow a linear regression line and is growing at a much faster rate than all other regions.
 - **Asia** - the population follows a linear regression from 1960 with an increased growth rate before this.
