@@ -5,8 +5,6 @@ date: "`r Sys.Date()`"
 output:
   bookdown::html_document2
 ---
-
-
 ```{r Section 1, message=FALSE, warning=FALSE, include=FALSE}
 #Loading Libraries
 library(rmarkdown)
@@ -28,6 +26,12 @@ population <- population_raw[-c(1:12),]
 
 ```
 # - Introduction:
+
+Trends in population growth hold high importance in many sectors of a country and the same is true for collections of countries be it the UN, EU or AUKUS. Throughout the world people representing sectors such as Energy, Health Care and Financials consider trends in population to be an important part of many decisions that are made be it within politics or private for-profit companies. Gender issues, immigration and fertility rates are also often at the forefront of discussions within the Western World. 
+
+Regarding the above points it stands to reason that population predictions are a valuable reference for governments and companies. One of the methods used to create these predictions is to look to the past to track population changes over time and how events like wars, famine or advancements may have impacted the growth or decline of a reproduction rate in an area of the world.
+
+We set out to answer some basic questions and show how there are similarities and differences among regions to give insight to how these may affect future predictions:
 
 # - Data Description:
 The data used is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 2.1 have been used in this assignment. 
