@@ -17,6 +17,7 @@ library(readxl)
 library(kableExtra)
 library(plotly)
 library(scales)
+library(vtable)
 
 # read in data and basic tidy
 population_raw <- read_excel("Data/WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1 (1).xlsx")
@@ -26,6 +27,7 @@ colnames(population_raw)<-population_raw[12,]
 population <- population_raw[-c(1:12),] 
 
 ```
+# - Introduction:
 
 # - Data Description:
 The data used is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 1.1 have been used in this assignment. 
@@ -165,12 +167,9 @@ Further analysis of the data for Africa, Europe and Oceania was not conducted to
 
 # - Changes in Sex Proportions Across the Continents and World:
 
-Table 3.1 shows the population of the sexes (in thousands) across multiple continents and the World. Listed is both the raw numbers of Male and Female in 1000s as well as the ratio of Male to Female in a magnitude of Males to 100 Females.
+```{r data_cleaning, echo=TRUE, message=FALSE, warning=FALSE}
 
-```{r dataa, echo=TRUE, message=FALSE, warning=FALSE}
-# select only relevant columns and rows for sex comparisons, original data from Lisa pull
 # Filter for World and Continents
-
 sex1<-select(population,c(3,9,11,14,15,17) ) %>%
   filter(Type %in% c("World","Region"))
 
@@ -185,18 +184,17 @@ sex1$Year <- as.numeric(sex1$Year)
 sex1$Male_Pop_Thousands <- as.numeric(sex1$Male_Pop_Thousands)
 sex1$Female_Pop_Thousands <- as.numeric(sex1$Female_Pop_Thousands)
 sex1$Sex_Ratio <- as.numeric(sex1$Sex_Ratio)
-```
-
-``` {r include=FALSE}
 
 # Change area label to title case
 sex1$Area <- str_to_title(sex1$Area)
+
 ```
 
-``` {r include=FALSE}
+``` {r first_table, echo=TRUE, message=FALSE, warning=FALSE}
 # Calculate the averages for each Area value
 averages <- aggregate(cbind(Male_Pop_Thousands, Female_Pop_Thousands, Sex_Ratio) ~ Area, data = sex1, FUN = mean)
 
+# Round the new columns to 2 decimal places
 averages$Male_Pop_Thousands<-round(averages$Male_Pop_Thousands, digits = 2)
 averages$Female_Pop_Thousands<-round(averages$Female_Pop_Thousands, digits = 2)
 averages$Sex_Ratio<-round(averages$Sex_Ratio, digits = 2)
@@ -206,48 +204,129 @@ averages_df <- data.frame(
   Region = averages$Area,
   `Avg_Male_Pop_Thousands` = averages$Male_Pop_Thousands,
   `Avg_Female_Pop_Thousands` = averages$Female_Pop_Thousands,
-  `Males_Per_100_Female` = averages$Sex_Ratio
-)
+  `Males_Per_100_Female` = averages$Sex_Ratio)
 
 ```
-``` {r INCLUDE=TRUE}
 
+``` {r echo=TRUE, message=FALSE, warning=FALSE}
+# use package kable to present the averages_df
 kable(averages_df,caption = "Male and Female Differences Across the Regions", digits = 0) %>%
   kable_styling()
-
 ```
 
-Within this data set is `r ncol(sex1)` columns. Missing above is the 'Year' column. There are `r nrow(sex1)` records in this  data set. Each row accounts for a single years' measurement for the associated region.
+Table 4.1 shows the average of the population of the sexes (in thousands) across multiple continents and the World. 
+
+Listed is both the raw numbers of Male and Female in 1000s as well as the ratio of Male to Female in a magnitude of Males to 100 Females. Within this data set is `r ncol(sex1)` columns. Missing above is the 'Year' column. There are `r nrow(sex1)` records in this  data set. Each row accounts for a single years' measurement for the associated region.
+
+
+``` {r echo=TRUE, message=FALSE, warning=FALSE}
+# filter data to remove the 'world' rows
+continent_filtered <- sex1 %>% 
+  filter(Area != 'World')
+
+# remove unwanted columns
+sex2 <- continent_filtered[-c(1,2,3)]
+
+# create summary statistics table, command from package called vtable
+st(sex2)
+```
+
+Table 4.2 is the summary statistics of the listed variables with the 'World' statistics removed. Inferring from this table, the smallest region with a minimum population of ~ 13,000,000 and the largest region with a maximum population of ~ 4,500,000,000.
 
 ## - Changes Across the World:
 
-Figure 3.2 shows the World sexes distribution from 1950 to 2021.
+``` {r out.width='100%', fig.height=3, echo=TRUE, message=FALSE, warning=FALSE}
 
-``` {r out.width='100%',fig.height=6}
-# Filter for world data only
-world <- filter(sex1, Type == 'World') 
+#transform to longf orm for plotting
+sex1_melted <- sex1 %>%
+  gather(Gender, Population, -Area, -Type, -Year, -Sex_Ratio) %>%
+  mutate(Gender = ifelse(Gender == "Male_Pop_Thousands", "Male", "Female"))
 
-# Create plot
-p <- ggplot(data = world, aes(x = Year)) +
-  
-  # Add blue line for males and attach to legend
-  geom_line(aes(y = Male_Pop_Thousands, color = "Male"), show.legend = TRUE) +
-  
-  # Add pink line for females and put on the legend
-  geom_line(aes(y = Female_Pop_Thousands, color = "Female"), show.legend = TRUE) +
-  
-  # Change the y label
-  labs(y = "Population Count") + 
-  
-  # Make axis lines solid
-  theme(axis.line = element_line(linetype = 'solid')) + 
-  
-  # Make y scale continuous rather than scientific notation
+# filter for rows with only 'World' value
+sex1_melted_filtered <- sex1_melted %>% 
+  filter(Area == 'World')
+
+# Create the plot
+p <- ggplot(data = sex1_melted_filtered, aes(x = Year, y = Population, color = Gender)) +
   scale_y_continuous(labels = label_number()) +
-  
-  # Specify manual color scale and labels
-  scale_color_manual(values = c("#B85887", "#2768A4"), labels = c("Male", "Female"), name = "Gender")
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Population")
 
-pp <- ggplotly(p) 
-pp
+fig1 <- ggplotly(p)
+fig1
+
 ```
+
+Figure 4.1 shows the World's sexes totals from 1950 to 2021.
+
+``` {r out.width='105%', fig.height=3, echo=TRUE, message=FALSE, warning=FALSE}
+
+# Create figure 4.2
+q <- ggplot(data = sex1_melted_filtered, aes(x = Year, y = Sex_Ratio, lty = 'Sex Ratio')) +
+  geom_line(size = 1) + 
+  scale_linetype('Legend') +
+  scale_color_manual("black") +
+  labs(x = "Year", y = "Females per 100 Males")
+
+fig2 <- ggplotly(q)
+fig2
+```
+
+Figure 4.2 shows the ratio of males to 100 females. A value of 100 shows an exact match of the sexes within the population.
+
+The chart shows an almost a linear increase of males:females until a peak of 101.307:100 in 2015. There is flat areas from 1959 - 1962, 1982 - 1986 along a near constant increase of males:females.
+
+## - Changes Within the Continents:
+
+``` {r out.width='100%', fig.height=5, echo=TRUE, message=FALSE, warning=FALSE}
+
+# filter data for rows without World
+continent_filtered <- sex1_melted %>% 
+  filter(Area != 'World')
+
+# create plot using ggplot, colour by gender
+r <- ggplot(data = continent_filtered, aes(x = Year, y = Population, color = Gender)) +
+  scale_y_continuous(labels = label_number()) +
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Population") +
+  
+  # plot the charts into smaller plots in a grid of 3 x 2
+  facet_wrap(~ Area, nrow = 3, ncol = 2, scales = "free_y")
+
+# show plot
+fig3 <- ggplotly(r)
+fig3
+
+```
+
+Figure 4.3 has 6 charts showing the population growth and split of genders. 
+
+* Africa, Europe and Oceania seem to be holding a constant difference. 
+* Asia is the only region with males growing ahead of females.
+* Northern America and Latin America both have females growing ahead of males.
+
+
+``` {r out.width='110%', fig.height=5, echo=TRUE, message=FALSE, warning=FALSE}
+
+# create the plot, colour by region
+S <- ggplot(data = continent_filtered, aes(x = Year, y = Sex_Ratio, color = Area)) +
+  geom_line(size = 0.6) + 
+  labs(x = "Year", y = "Females per 100 Males")
+
+# show plot
+fig4 <- ggplotly(S)
+fig4
+
+
+```
+
+Figure 4.4 is the combined ratios of males to 100 females. Colour coded by each region.
+
+- **Africa:** Stays mostly constant over time.
+- **Asia:** Stays mostly constant over time.
+- **Europe:** An upwards trend seeming to taper off recently.
+- **Latin America and the Caribbean:** Linear, downwards trend.
+- **Northern America:** A large dip until 1983 at which point the trend reverses.
+- **Oceania:** A gentle, downwards trend.
+
+# - Conclusion:
