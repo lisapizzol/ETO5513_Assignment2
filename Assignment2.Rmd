@@ -340,4 +340,10 @@ Figure 4.4 is the combined ratios of males to 100 females. Colour coded by each 
 - **Oceania:** A gentle, downwards trend.
 
 # - Conclusion:
+Global populations from 1950 to 2021 have increased by 218% as shown in Table 1.2. Figure 1.1 also shows this increase has been linear except in the 1950’s and recently from about 2010 onwards where the rate of increase has been faster.  
+
+Table 1.2 and Figure 1.2 show the regions have also experienced increases in population size but that their rate of increase has varied. Africa has the highest rate of increase with at 512% from 1950 to 2021, and it is  non-linear The lowest regional growth occurred in Europe which showed a relative change of only 36%. Europe also experienced a halt in growth from the early 1990s until the late 2000’s, before showing a small increase after this time. The regions of Asia; Latin America and the Caribbean; and Northern America all showed similar linear increases in population over the time period. Finally, Oceania showed an increase which was not linear.
+
+# - References:
+United Nations. (2022). World population prospects - population division. https://population.un.org/wpp/ 
 
