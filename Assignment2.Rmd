@@ -31,7 +31,13 @@ Trends in population growth hold high importance in many sectors of a country an
 
 Regarding the above points it stands to reason that population predictions are a valuable reference for governments and companies. One of the methods used to create these predictions is to look to the past to track population changes over time and how events like wars, famine or advancements may have impacted the growth or decline of a reproduction rate in an area of the world.
 
-We set out to answer some basic questions and show how there are similarities and differences among regions to give insight to how these may affect future predictions:
+This assignment attempts to answer the following basic questions and show how there are similarities and differences among regions:
+
+- How has the Global population changed over time?
+- How have regional populations changed over time?
+- How have Gender populations changed globally over time?
+- How have Gender populations changed within the regions over time?
+
 
 # - Data Description:
 The data used is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 2.1 have been used in this assignment. 
@@ -334,3 +340,4 @@ Figure 4.4 is the combined ratios of males to 100 females. Colour coded by each 
 - **Oceania:** A gentle, downwards trend.
 
 # - Conclusion:
+
