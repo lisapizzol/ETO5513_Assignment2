@@ -129,7 +129,7 @@ pp
 In Figure 3.1 the World Population has a steady increase from 1950 to 2021. This increase is linear, with the population values being slightly above the regression line in the 1950s and from 2010 onwards.
 
 ## Population Growth in the Regions from 1950 to 2021:
-Figure 4.2 shows the population numbers in thousands in the regions from 1950 to 2021. All regions have a linear regression fitted to their data in black. Each region has a different y-axis due to their varied population sizes.
+Figure 3.2 shows the population numbers in thousands in the regions from 1950 to 2021. All regions have a linear regression fitted to their data in black. Each region has a different y-axis due to their varied population sizes.
 
 ```{r data5, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The Region Populations in January (measured in thousands) from 1950 to 2021.",out.width='100%',fig.height=12.5}
 
@@ -172,6 +172,7 @@ An increase in population across all regions is observed in Figure 3.2, however 
 - **Latin American and the Caribbean** - the population follows a linear regression except in the early 1950s where the population is higher than the linear regression.
 - **Northern America** - the population follows a linear regression but  with a slight deviation from this line in the late 1980s to the early 1990s. 
 - **Oceania** - does not follow the linear regression line. 
+
 Further analysis of the data for Africa, Europe and Oceania was not conducted to determine their actual regression type but could be an extension beyond this assignment. 
 
 
@@ -247,7 +248,7 @@ Table 4.2 is the summary statistics of the listed variables with the 'World' sta
 
 ``` {r out.width='100%', fig.height=3, echo=TRUE, message=FALSE, warning=FALSE}
 
-#transform to longf orm for plotting
+#transform to long form for plotting
 sex1_melted <- sex1 %>%
   gather(Gender, Population, -Area, -Type, -Year, -Sex_Ratio) %>%
   mutate(Gender = ifelse(Gender == "Male_Pop_Thousands", "Male", "Female"))
@@ -311,7 +312,7 @@ fig3
 
 Figure 4.3 has 6 charts showing the population growth and split of genders. 
 
-* Africa, Europe and Oceania seem to be holding a constant difference. 
+* Africa, Europe, and Oceania seem to be holding a constant difference. 
 * Asia is the only region with males growing ahead of females.
 * Northern America and Latin America both have females growing ahead of males.
 
@@ -343,9 +344,9 @@ Figure 4.4 is the combined ratios of males to 100 females. Colour coded by each 
 
 Global populations from 1950 to 2021 have increased by 218% as shown in Table 1.2. Figure 1.1 also shows this increase has been linear except in the 1950’s and recently from about 2010 onwards where the rate of increase has been faster.  
 
-Table 1.2 and Figure 1.2 show the regions have also experienced increases in population size but that their rate of increase has varied. Africa has the highest rate of increase with at 512% from 1950 to 2021, and it is  non-linear The lowest regional growth occurred in Europe which showed a relative change of only 36%. Europe also experienced a halt in growth from the early 1990s until the late 2000’s, before showing a small increase after this time. The regions of Asia; Latin America and the Caribbean; and Northern America all showed similar linear increases in population over the time period. Finally, Oceania showed an increase which was not linear.
+Table 1.2 and Figure 1.2 show the regions have also experienced increases in population size but that their rate of increase has varied. Africa has the highest rate of increase with at 512% from 1950 to 2021, and it is  non-linear. The lowest regional growth occurred in Europe which showed a relative change of only 36%. Europe also experienced a halt in growth from the early 1990s until the late 2000’s, before showing a small increase after this time. The regions of Asia; Latin America and the Caribbean; and Northern America all showed similar linear increases in population over the time period. Finally, Oceania showed an increase which was not linear.
 
-As the population grows, the ratio of male:female also changes over time. Seen in figure 4.3, We can see that Asia, North America and Latin America are all growing apart in terms of a 1:1 ratio. Europe while growing in population still has a large gap in the ratio between men and women. This is shown in more detail in figure 4.4.
+As the population grows, the ratio of male:female also changes over time. Seen in Figure 4.3, We can see that Asia, North America and Latin America are all growing apart in terms of a 1:1 ratio. Europe while growing in population still has a large gap in the ratio between men and women. This is shown in more detail in Figure 4.4.
 
 Understanding the way that populations grow or stagnate offers valuable insights into dynamics within society and also helps aide analysts in building models for predicting future growth.
 
