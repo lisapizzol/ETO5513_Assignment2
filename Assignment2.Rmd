@@ -42,7 +42,7 @@ This assignment attempts to answer the following basic questions and show how th
 # - Data Description:
 The data used is from the United Nations, 2022, and can be found at [World population prospects - population division](https://population.un.org/wpp/). It contains Population, Fertility, Mortality and Migration estimates for 237 countries and/or regions from 1950 to 2021. Only the following selected variables listed in Table 2.1 have been used in this assignment. 
 
-```{r data1, echo=TRUE, message=FALSE, warning=FALSE}
+```{r data1, message=FALSE, warning=FALSE, include=FALSE}
 # select only relevant columns and rows
 pop_descrip<-select(population,c(3,9,11,12,14,15,17) ) %>%
   filter(Type %in% c("World","Region"))
@@ -50,7 +50,7 @@ pop_descrip<-select(population,c(3,9,11,12,14,15,17) ) %>%
 ```
 
 
-```{r data2, echo=TRUE, message=FALSE, warning=FALSE}
+```{r data2, echo=FALSE, message=FALSE, warning=FALSE}
 # create list of variables
 names_data<-(names(pop_descrip))
 
@@ -74,7 +74,7 @@ This filtered data set contains `r ncol(pop_descrip)` variables. An outline of t
 ## Relative Changes in Population:
 Table 3.1 shows the  population (in thousands) for the World and the Regions in 1950 and 2021 and the Relative Population Change between these two years as a percentage.
 
-```{r data3, echo=TRUE, message=FALSE, warning=FALSE}
+```{r data3, echo=FALSE, message=FALSE, warning=FALSE}
 # select only relevant columns and rows
 pop1<-select(population,c(3,9,11,12) ) %>%
   filter(Type %in% c("World","Region"))
@@ -101,7 +101,7 @@ From Table 3.1  the Worlds Relative Population Change between 1950 and 2021 is 2
 ## World Population Growth between 1950 and 2021:
 Figure 3.1 shows the World population from 1950 to 2021. In blue is the population values at each year, while in orange is a linear regression line for this data.
 
-```{r data4, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The World Population in January (measured in thousands) from 1950 to 2021.",out.width='100%',out.height='100%'}
+```{r data4, echo=FALSE, fig.cap="The World Population in January (measured in thousands) from 1950 to 2021.", message=FALSE, warning=FALSE, out.height='100%', out.width='100%'}
 
 # filter for world data only
 world<-filter(pop1, Type == 'World') 
@@ -131,7 +131,7 @@ In Figure 3.1 the World Population has a steady increase from 1950 to 2021. This
 ## Population Growth in the Regions from 1950 to 2021:
 Figure 3.2 shows the population numbers in thousands in the regions from 1950 to 2021. All regions have a linear regression fitted to their data in black. Each region has a different y-axis due to their varied population sizes.
 
-```{r data5, echo=TRUE, message=FALSE, warning=FALSE, fig.cap = "The Region Populations in January (measured in thousands) from 1950 to 2021.",out.width='100%',fig.height=12.5}
+```{r data5, echo=FALSE, fig.cap="The Region Populations in January (measured in thousands) from 1950 to 2021.", fig.height=12.5, message=FALSE, warning=FALSE, out.width='100%'}
 
 # get region data only
 region<-filter(pop1, Type == 'Region') 
@@ -178,7 +178,7 @@ Further analysis of the data for Africa, Europe and Oceania was not conducted to
 
 # - Changes in Sex Proportions Across the Continents and World:
 
-```{r data_cleaning, echo=TRUE, message=FALSE, warning=FALSE}
+```{r data_cleaning, echo=FALSE, message=FALSE, warning=FALSE}
 
 # Filter for World and Continents
 sex1<-select(population,c(3,9,11,14,15,17) ) %>%
@@ -201,7 +201,7 @@ sex1$Area <- str_to_title(sex1$Area)
 
 ```
 
-``` {r first_table, echo=TRUE, message=FALSE, warning=FALSE}
+``` {r first_table, echo=FALSE, message=FALSE, warning=FALSE}
 # Calculate the averages for each Area value
 averages <- aggregate(cbind(Male_Pop_Thousands, Female_Pop_Thousands, Sex_Ratio) ~ Area, data = sex1, FUN = mean)
 
@@ -219,7 +219,7 @@ averages_df <- data.frame(
 
 ```
 
-``` {r echo=TRUE, message=FALSE, warning=FALSE}
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
 # use package kable to present the averages_df
 kable(averages_df,caption = "Male and Female Differences Across the Regions", digits = 0) %>%
   kable_styling()
@@ -230,7 +230,7 @@ Table 4.1 shows the average of the population of the sexes (in thousands) across
 Listed is both the raw numbers of Male and Female in 1000s as well as the ratio of Male to Female in a magnitude of Males to 100 Females. Within this data set is `r ncol(sex1)` columns. Missing above is the 'Year' column. There are `r nrow(sex1)` records in this  data set. Each row accounts for a single years' measurement for the associated region.
 
 
-``` {r echo=TRUE, message=FALSE, warning=FALSE}
+``` {r echo=FALSE, message=FALSE, warning=FALSE}
 # filter data to remove the 'world' rows
 continent_filtered <- sex1 %>% 
   filter(Area != 'World')
@@ -246,7 +246,7 @@ Table 4.2 is the summary statistics of the listed variables with the 'World' sta
 
 ## - Changes Across the World:
 
-``` {r out.width='100%', fig.height=3, echo=TRUE, message=FALSE, warning=FALSE}
+``` {r out.width='100%', fig.height=3, echo=FALSE, message=FALSE, warning=FALSE}
 
 #transform to long form for plotting
 sex1_melted <- sex1 %>%
@@ -270,7 +270,7 @@ fig1
 
 Figure 4.1 shows the World's sexes totals from 1950 to 2021.
 
-``` {r out.width='105%', fig.height=3, echo=TRUE, message=FALSE, warning=FALSE}
+``` {r out.width='105%', fig.height=3, echo=FALSE, message=FALSE, warning=FALSE}
 
 # Create figure 4.2
 q <- ggplot(data = sex1_melted_filtered, aes(x = Year, y = Sex_Ratio, lty = 'Sex Ratio')) +
@@ -289,7 +289,7 @@ The chart shows an almost a linear increase of males:females until a peak of 101
 
 ## - Changes Within the Continents:
 
-``` {r out.width='100%', fig.height=5, echo=TRUE, message=FALSE, warning=FALSE}
+``` {r out.width='100%', fig.height=5, echo=FALSE, message=FALSE, warning=FALSE}
 
 # filter data for rows without World
 continent_filtered <- sex1_melted %>% 
@@ -317,7 +317,7 @@ Figure 4.3 has 6 charts showing the population growth and split of genders.
 * Northern America and Latin America both have females growing ahead of males.
 
 
-``` {r out.width='110%', fig.height=5, echo=TRUE, message=FALSE, warning=FALSE}
+``` {r out.width='110%', fig.height=5, echo=FALSE, message=FALSE, warning=FALSE}
 
 # create the plot, colour by region
 S <- ggplot(data = continent_filtered, aes(x = Year, y = Sex_Ratio, color = Area)) +
